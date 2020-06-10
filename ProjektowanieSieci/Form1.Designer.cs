@@ -98,7 +98,7 @@
             this.textBoxA.Name = "textBoxA";
             this.textBoxA.Size = new System.Drawing.Size(200, 20);
             this.textBoxA.TabIndex = 6;
-            this.textBoxA.Text = "0.05:2:0.01";
+            this.textBoxA.Text = "0.5:1.5:0.1";
             // 
             // textBoxAn
             // 
@@ -106,7 +106,7 @@
             this.textBoxAn.Name = "textBoxAn";
             this.textBoxAn.Size = new System.Drawing.Size(200, 20);
             this.textBoxAn.TabIndex = 7;
-            this.textBoxAn.Text = "10:2:1";
+            this.textBoxAn.Text = "1:1:1";
             // 
             // button1
             // 

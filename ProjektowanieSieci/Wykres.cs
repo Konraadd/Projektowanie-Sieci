@@ -48,6 +48,10 @@ namespace ProjektowanieSieci
                 }
             }
             */
+            for (int i = 0; i < t.Count; i++)
+            {
+                blocking_p.Add(new List<double>());
+            }
             for (double i = a[0]; i < a[1]; i += a[2])
             {
                 x_data.Add(i);
@@ -67,6 +71,7 @@ namespace ProjektowanieSieci
             int count = 0;
             foreach (List<double> values in blocking_p)
             {
+                count++;
                 this.formsPlot1.plt.PlotSignalXY(x_data.ToArray(), ScottPlot.Tools.Log10(values.ToArray()), label: "Klasa A" + count.ToString());
             }
 
@@ -77,11 +82,6 @@ namespace ProjektowanieSieci
             this.formsPlot1.plt.AxisBounds(bounds[0], bounds[1], bounds[2], bounds[3]);
             this.formsPlot1.plt.Legend();
             
-        }
-
-        private void formsPlot1_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

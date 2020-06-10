@@ -18,6 +18,7 @@ namespace ProjektowanieSieci
         public static List<double> A_ratio = new List<double>();
         public static List<int> Ti = new List<int>();
         public static List<double> a = new List<double>();
+        public static bool is_plot_logarithmic;
 
 
         public Form1()
@@ -33,6 +34,7 @@ namespace ProjektowanieSieci
         private void button1_Click(object sender, EventArgs e)
         {
             V = 0;
+            is_plot_logarithmic = checkBox1.Checked;
             A_ratio = new List<double>();
             Ti = new List<int>();
             a = new List<double>();
@@ -114,5 +116,6 @@ namespace ProjektowanieSieci
         {
 
         }
+
     }
 }

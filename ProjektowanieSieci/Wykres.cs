@@ -21,6 +21,7 @@ namespace ProjektowanieSieci
 
         private void Wykres_Load(object sender, EventArgs e)
         {
+            bool is_plot_logarithmic = Form1.is_plot_logarithmic;
             int V = Form1.V;
             List<double> A_ratio = Form1.A_ratio;
             List<int> t = Form1.Ti;
@@ -30,24 +31,7 @@ namespace ProjektowanieSieci
             List<double> x_data = new List<double>(a.Count);
 
 
-            /*
-            List<double> x_data = new List<double>(a.Count);
-            List<List<double>> blocking_p = new List<List<double>>();
-            for (int i = 0; i < Ti.Count; i++)
-            {
-                blocking_p.Add(new List<double>());
-            }
-            for (double i = a[0]; i < a[1]; i += a[2])
-            {
-                x_data.Add(i);
-
-                List<double> temp = KaufmanRoberts.BlockingPropabilities(V, Ti, i, A_ratio);
-                for (int c = 0; c < temp.Count; c++)
-                {
-                    blocking_p.ElementAt(c).Add(temp[c]);
-                }
-            }
-            */
+            
             for (int i = 0; i < t.Count; i++)
             {
                 blocking_p.Add(new List<double>());
@@ -72,12 +56,21 @@ namespace ProjektowanieSieci
             foreach (List<double> values in blocking_p)
             {
                 count++;
-                this.formsPlot1.plt.PlotSignalXY(x_data.ToArray(), ScottPlot.Tools.Log10(values.ToArray()), label: "Klasa A" + count.ToString());
+                double[] plot_values = values.ToArray();
+                if (is_plot_logarithmic)
+                {
+                    plot_values = ScottPlot.Tools.Log10(plot_values);
+                    this.formsPlot1.plt.Ticks(logScaleY: true);
+                    this.formsPlot1.plt.YLabel("Prawdopodobieństwo blokady (10^)");
+                }
+                else
+                {
+                    this.formsPlot1.plt.YLabel("Prawdopodobieństwo blokady");
+                }
+                this.formsPlot1.plt.PlotSignalXY(x_data.ToArray(), plot_values, label: "Klasa A" + count.ToString());
             }
 
-            this.formsPlot1.plt.Ticks(logScaleY: true);
             this.formsPlot1.plt.XLabel("Oferowanych ruch a");
-            this.formsPlot1.plt.YLabel("Prawdopodobieństwo blokady (10^)");
             double[] bounds = this.formsPlot1.plt.AxisAuto(0.05, 0.1);
             this.formsPlot1.plt.AxisBounds(bounds[0], bounds[1], bounds[2], bounds[3]);
             this.formsPlot1.plt.Legend();

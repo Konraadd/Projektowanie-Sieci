@@ -22,12 +22,15 @@ namespace ProjektowanieSieci
         private void Wykres_Load(object sender, EventArgs e)
         {
             int V = Form1.V;
-            List<int> A_ratio = Form1.A_ratio;
-            List<int> Ti = Form1.Ti;
+            List<double> A_ratio = Form1.A_ratio;
+            List<int> t = Form1.Ti;
             List<double> a = Form1.a;
+            List<double> Ai;
+            List<List<double>> blocking_p = new List<List<double>>();
+            List<double> x_data = new List<double>(a.Count);
 
 
-
+            /*
             List<double> x_data = new List<double>(a.Count);
             List<List<double>> blocking_p = new List<List<double>>();
             for (int i = 0; i < Ti.Count; i++)
@@ -44,9 +47,22 @@ namespace ProjektowanieSieci
                     blocking_p.ElementAt(c).Add(temp[c]);
                 }
             }
+            */
+            for (double i = a[0]; i < a[1]; i += a[2])
+            {
+                x_data.Add(i);
+                double aR = Math.Round(i, 1);       //zaokrąglone a
+                Ai = KaufmanRoberts.calculateAi(A_ratio, aR, V, t);
+                
+                List<double> temp = KaufmanRoberts.BlockingPropabilities(V, t, Ai, aR);
+                for (int c = 0; c < temp.Count; c++)
+                {
+                    blocking_p.ElementAt(c).Add(temp[c]);
+                }
+            }
 
 
-
+            // zapelnienie wykresu danymi
             this.formsPlot1.plt.Clear();
             int count = 0;
             foreach (List<double> values in blocking_p)
@@ -61,6 +77,11 @@ namespace ProjektowanieSieci
             this.formsPlot1.plt.AxisBounds(bounds[0], bounds[1], bounds[2], bounds[3]);
             this.formsPlot1.plt.Legend();
             
+        }
+
+        private void formsPlot1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

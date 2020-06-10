@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
 using System.Windows.Forms;
-using PrawdopodobieństwoBlokady;
 using ScottPlot;
 
 namespace ProjektowanieSieci
@@ -16,7 +15,7 @@ namespace ProjektowanieSieci
     public partial class Form1 : Form
     {
         public static int V = 0;
-        public static List<int> A_ratio = new List<int>();
+        public static List<double> A_ratio = new List<double>();
         public static List<int> Ti = new List<int>();
         public static List<double> a = new List<double>();
 
@@ -34,7 +33,7 @@ namespace ProjektowanieSieci
         private void button1_Click(object sender, EventArgs e)
         {
             V = 0;
-            A_ratio = new List<int>();
+            A_ratio = new List<double>();
             Ti = new List<int>();
             a = new List<double>();
 
@@ -109,6 +108,11 @@ namespace ProjektowanieSieci
 
             Wykres wykres = new Wykres();
             wykres.Show();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

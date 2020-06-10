@@ -38,6 +38,7 @@
             this.formsPlot1.Name = "formsPlot1";
             this.formsPlot1.Size = new System.Drawing.Size(915, 474);
             this.formsPlot1.TabIndex = 0;
+            this.formsPlot1.Load += new System.EventHandler(this.formsPlot1_Load);
             // 
             // Wykres
             // 

@@ -8,55 +8,43 @@ namespace PrawdopodobieństwoBlokady
 {
     static class KaufmanRoberts
     {
+        static int truncation = 1;
 
-        static public List<double> BlockingPropabilities(int V, List<int> t, double a, List<int> A_ratio)
+        static public List<double> BlockingPropabilities(int V, List<int> t, List<double> A, double a)
         {
-            if (A_ratio.Count != t.Count)
-            {
-                throw new Exception("Length of list t and list A_ratio must be the same!");
-            }
 
-            double aV = a * V;
-            double x = aV / A_ratio.Sum();
-
-            List<double> A = calculateAi(A_ratio, a, V, t);
-
-            return BlockingPropabilities(V, t, A);
-        }
-
-        static public List<double> BlockingPropabilities(int V, List<int> t, List<double> A)
-        {
             if (t.Count != A.Count)
             {
-                throw new Exception("Length of list t and list A must be the same!");
+                throw new Exception("Length of list t and list A should be the same!");
             }
+
             // find propability coefficients
-            List<double> blockingCoefficients = new List<double>();
-            blockingCoefficients.Add(1d);
+            List<double> blockingCoefficients = new List<double>();         //        P 
+            blockingCoefficients.Add(1d / truncation);
             for (int i = 1; i <= V; i++)
             {
-                double coefficient = calculateCoefficient(blockingCoefficients, i, t, A);
+                double coefficient = calculateCoefficient(blockingCoefficients, i, t, A);       //P (0,1,...n)
                 blockingCoefficients.Add(coefficient);
             }
             // normalize propability
-            double normalizationConstant = 1 / blockingCoefficients.Sum();
-            List<double> blockingPropabilities = new List<double>(blockingCoefficients.Count);
-            double xd = blockingCoefficients.Sum();
-            foreach(double coeff in blockingCoefficients)
+            double normalizationConstant = 1 / blockingCoefficients.Sum();          //Gv 
+            List<double> blockingPropabilities = new List<double>(blockingCoefficients.Count);      // [P]
+            double xd = blockingCoefficients.Sum();             //
+            foreach (double coeff in blockingCoefficients)
             {
-                blockingPropabilities.Add(coeff * normalizationConstant);
+                blockingPropabilities.Add(coeff * normalizationConstant);       // [P](0,1,2,...,n)
             }
-            // find blocking propability for each class
-            List<double> classBlockingPropabilities = new List<double>(t.Count);
-            foreach(int i in t)
+            // find blocking propability for each class             
+            List<double> classBlockingPropabilities = new List<double>(t.Count);            //E
+            foreach (int i in t)
             {
-                classBlockingPropabilities.Add(blockingPropabilities.Skip(V - i + 1).Sum());
+                classBlockingPropabilities.Add(blockingPropabilities.Skip(V - i + 1).Sum());        //E(1,2,3...)
             }
             double check = blockingPropabilities.Sum();
             return classBlockingPropabilities;
         }
 
-        static double calculateCoefficient(List<double> coeffs, int n, List<int> t, List<double> A)
+        static double calculateCoefficient(List<double> coeffs, int n, List<int> t, List<double> A)     //liczenie P
         {
             double coeff = 0;
             for (int i = 0; i < t.Count; i++)
@@ -67,26 +55,38 @@ namespace PrawdopodobieństwoBlokady
             }
             // if it wasnt changed, give it initial value
             if (coeff == 0)
-                coeff = 1;
-            return (coeff/n);
+                coeff = 1 / truncation;
+            return (coeff / n) / truncation;
         }
 
-        static private List<double> calculateAi(List<int> A_ratio, double a, int V, List<int> t)
+        static public List<double> calculateAi(List<double> B, double a, int V, List<int> t)        //
         {
             List<double> A = new List<double>();
-
-            double aV = a * V;
-            double AiTi = 0;
-            for(int i=0; i< A_ratio.Count; i++)
+            double suma_proporcji = 0;
+            foreach (double index in B)
             {
-                AiTi += A_ratio[i] * t[i];
+                suma_proporcji += index;
             }
-            double x = aV / AiTi;
-            for (int i = 0; i < A_ratio.Count; i++)
+            double aV = a * V;
+            double Ai;
+            for (int i = 0; i < B.Count; i++)
             {
-                A.Add(x*A_ratio[i]);
+                Ai = aV / (B[i] * suma_proporcji) / t[i];
+                A.Add(Ai);
             }
             return A;
+        }
+
+        static public bool checkEi(List<double> BlockingProbabilities, List<double> P_blokady)
+        {
+            for (int i = 0; i < P_blokady.Count; i++)
+            {
+                if (BlockingProbabilities[i] > P_blokady[i])
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
